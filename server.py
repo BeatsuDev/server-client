@@ -71,7 +71,7 @@ helpmsg = '''
 msg <message>
 login <username>
 help [command]
-'''[:-1]
+'''[1:-1]
 
 
 

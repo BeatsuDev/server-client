@@ -16,7 +16,7 @@ def listen_to_server():
 		try:
 			data = client_socket.recv(1024).decode()
 
-			print('SERVER MESSAGE: ' + str(data))
+			print('SERVER MESSAGE:\n' + str(data))
 
 		except ConnectionResetError:
 			print("\nConnection lost.")
